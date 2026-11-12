@@ -18,3 +18,4 @@ for i, p in enumerate(rows):
 with open(f'{D}/panos.csv', 'w', newline='') as f:
     w = csv.DictWriter(f, fieldnames=list(out[0].keys())); w.writeheader(); w.writerows(out)
 print(len(out), 'consultas,', len({o['pano_id'] for o in out if o['status'] == 'OK'}), 'panos distintos')
+# disparo 2026-11-12T15:52:50Z
