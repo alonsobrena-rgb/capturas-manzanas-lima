@@ -1,21 +1,23 @@
 name: panos-streetview
 on:
-  workflow_dispatch:
   push:
-    paths: ['panos/puntos.csv']
+    paths: ['panos/puntos.csv', 'panos/consultar.py']
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
-  panos:
+  consultar:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: python3 src/panos.py
+      - name: Consultar metadata de Street View
         env:
-          GMAPS_KEY: ${{ secrets.GMAPS_KEY }}
-      - run: |
-          git config user.name "panos-bot"
-          git config user.email "actions@users.noreply.github.com"
+          GOOGLE_MAPS_KEY: ${{ secrets.GOOGLE_MAPS_KEY }}
+        run: python3 panos/consultar.py
+      - name: Guardar resultado en el repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898+github-actions[bot]@users.noreply.github.com"
           git add panos/panos.csv
-          git commit -m "panos: metadata Street View" || echo "sin cambios"
+          git commit -m "panos.csv actualizado" || echo "sin cambios"
           git push
