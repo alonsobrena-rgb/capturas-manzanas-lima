@@ -6,11 +6,12 @@ window.cargar = (key) => new Promise((ok, err) => {
   s.src = 'https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(key) + '&libraries=streetView&callback=__init&v=weekly';
   s.onerror = err; document.head.appendChild(s);
 });
-window.consultar = async (lat, lng, radio) => {
+window.consultar = async (lat, lng, radio, panoId) => {
   const sv = new google.maps.StreetViewService();
   try {
-    const r = await sv.getPanorama({ location: { lat, lng }, radius: radio,
-      preference: google.maps.StreetViewPreference.BEST, sources: [google.maps.StreetViewSource.OUTDOOR] });
+    const req = panoId ? { pano: panoId } : { location: { lat, lng }, radius: radio,
+      preference: google.maps.StreetViewPreference.BEST, sources: [google.maps.StreetViewSource.OUTDOOR] };
+    const r = await sv.getPanorama(req);
     const d = r.data;
     const tiempos = (d.time || []).map(t => { const k = Object.keys(t); const pano = t.pano || t[k.find(x => typeof t[x] === 'string')];
       const fecha = Object.values(t).find(v => v instanceof Date); return { pano, fecha: fecha ? fecha.toISOString().slice(0, 7) : null }; });
