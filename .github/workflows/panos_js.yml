@@ -1,0 +1,26 @@
+name: panos-streetview-js
+on:
+  push:
+    paths: ['panos/js/**']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  consultar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm i --no-save playwright-core@1
+      - name: Consultar StreetViewService
+        env:
+          GOOGLE_MAPS_KEY: ${{ secrets.GOOGLE_MAPS_KEY }}
+        run: node panos/js/consultar.mjs
+      - name: Guardar resultado
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898+github-actions[bot]@users.noreply.github.com"
+          git add panos/panos_js.json
+          git commit -m "panos_js.json actualizado" || echo "sin cambios"
+          git pull --rebase -q && git push

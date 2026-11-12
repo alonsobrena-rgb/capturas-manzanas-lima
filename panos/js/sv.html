@@ -1,0 +1,21 @@
+<!doctype html><html><head><meta charset="utf-8"><title>sv</title></head><body>
+<script>
+window.cargar = (key) => new Promise((ok, err) => {
+  window.__init = ok;
+  const s = document.createElement('script');
+  s.src = 'https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(key) + '&libraries=streetView&callback=__init&v=weekly';
+  s.onerror = err; document.head.appendChild(s);
+});
+window.consultar = async (lat, lng, radio) => {
+  const sv = new google.maps.StreetViewService();
+  try {
+    const r = await sv.getPanorama({ location: { lat, lng }, radius: radio,
+      preference: google.maps.StreetViewPreference.BEST, sources: [google.maps.StreetViewSource.OUTDOOR] });
+    const d = r.data;
+    const tiempos = (d.time || []).map(t => { const k = Object.keys(t); const pano = t.pano || t[k.find(x => typeof t[x] === 'string')];
+      const fecha = Object.values(t).find(v => v instanceof Date); return { pano, fecha: fecha ? fecha.toISOString().slice(0, 7) : null }; });
+    return { status: 'OK', pano: d.location.pano, lat: d.location.latLng.lat(), lng: d.location.latLng.lng(),
+      fecha: d.imageDate || null, links: (d.links || []).map(l => ({ pano: l.pano, heading: l.heading })), tiempos };
+  } catch (e) { return { status: String(e.code || e.message || e).slice(0, 60) }; }
+};
+</script></body></html>
