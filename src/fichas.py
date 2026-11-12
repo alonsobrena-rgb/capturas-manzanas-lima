@@ -18,7 +18,7 @@ MPP = {'PL': 1.46993, 'SQ': 1.4111, 'SM': 1.2698, 'MG': 1.175779, 'MF': 1.2701, 
 OFFSET_M = {p: (0.0, 0.0) for p in DIRS.values()}      # (este, norte) en m a SUMAR a la geometría antes de dibujar sobre el visor
 if os.path.exists(S + 'fichas_offset.json'):
     OFFSET_M.update({k: tuple(v) for k, v in json.load(open(S + 'fichas_offset.json')).items()})
-VER = 'v2'
+VER = 'v3'
 MAG = (255, 0, 255)
 PZ, VM = REPO + 'img/pz/', REPO + 'img/vm/'
 os.makedirs(PZ, exist_ok=True); os.makedirs(VM, exist_ok=True)
@@ -98,7 +98,7 @@ def do_visor(pref, d, ms):
         if box[2] - box[0] < 40 or box[3] - box[1] < 40:
             out.pop(i); continue
         c = im.crop(box); dr = ImageDraw.Draw(c)
-        outline(dr, [[(x - box[0], y - box[1]) for x, y in r] for r in rs])
+        pass  # sin contorno en la captura del visor (tapaba números y quedaba desfasado)
         c.save(dst, 'JPEG', quality=90, optimize=True); cache['vm/' + i] = sig; n += 1
     return n, out
 
