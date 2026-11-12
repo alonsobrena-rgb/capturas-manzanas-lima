@@ -23,7 +23,7 @@ main{padding:0 16px 24px;max-width:1500px;margin:0 auto}
 .bar button{border:1px solid #ccc;background:#fff;border-radius:7px;padding:6px 10px;cursor:pointer}
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{border-collapse:collapse;width:100%;background:#fff;border:1px solid var(--bd)}th,td{padding:6px 8px;border-bottom:1px solid #eee;text-align:left;vertical-align:top}th{background:#f3f3f3;font-size:13px}
-tr.mz,tr.rs{cursor:pointer}tr.mz:hover,tr.rs:hover{background:#f6f9ff}.pill{display:inline-block;padding:1px 8px;border-radius:20px;font-size:12px;border:1px solid #ccc;white-space:nowrap}
+tr.mz,tr.rs,tr.mz4{cursor:pointer}tr.mz4:hover{background:#f6f9ff}tr.mz:hover,tr.rs:hover{background:#f6f9ff}.pill{display:inline-block;padding:1px 8px;border-radius:20px;font-size:12px;border:1px solid #ccc;white-space:nowrap}
 .p-util{background:#e3f6ea;border-color:#9fd8b4;color:#055c2a}.p-duda{background:#fff1dd;border-color:#f5c27a;color:#8a4b00}.p-desc{background:#eee;border-color:#ccc;color:#444}.p-var{background:#efe3fa;border-color:#c9a3ea;color:#5b1d8a}.p-pend{background:#f3f3f3;color:#777}.p-ok{background:#e6edff;border-color:#a9bdf5;color:#1d3c9e}
 .ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:12px;background:#fff;border:1px solid var(--bd);border-radius:10px;padding:12px;margin:6px 0 10px}
 .ficha figure{margin:0}.ficha img{width:100%;border:1px solid #ddd;border-radius:6px;cursor:zoom-in;display:block}.ficha figcaption{font-size:12px;color:var(--mut);margin-top:3px}
@@ -68,6 +68,7 @@ const D=__DATA__;
 const DD=__DIST__;
 const CAPT=__CAPT__;
 const VIS=__VIS__;
+const FVM=new Set(__FICHAS__);
 const $=i=>document.getElementById(i);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const st=e=>e&&e.startsWith('útil')?'útil':e;
@@ -107,7 +108,7 @@ function render(){cards();
  else if(sub==='map'){$('s-map').classList.add('on');drawMap()}
  else if(sub==='vis'){$('s-vis').classList.add('on');drawVis()}
  else{$('s-par').classList.add('on');draw2()}}
-function go(p){if(p!==cur){cur=p;sub='man';opened=null}render();window.scrollTo({top:0})}
+function go(p){if(p!==cur){cur=p;sub='man';opened=null;open4=null}render();window.scrollTo({top:0})}
 $('cards').addEventListener('click',e=>{const b=e.target.closest('.card');if(b)go(b.dataset.p)});
 $('rbtn').onclick=()=>go('RES');
 $('vres').addEventListener('click',e=>{const r=e.target.closest('tr.rs');if(r)go(r.dataset.p)});
@@ -146,10 +147,15 @@ function opts(){const L=DD.mz.filter(m=>m.d===cur);const av=[...new Set(L.flatMa
  $('m4').value='';$('q4').value=''}
 function rows4(){const v=$('v4').value,z=$('z4').value,f=$('m4').value,q=$('q4').value.toLowerCase();
  return DD.mz.filter(m=>m.d===cur&&(!v||m.avs.includes(v))&&(!z||m.zf===z)&&(f!=='no'||!m.mon)&&(f!=='dif'||m.dif)&&(!q||(m.id+' '+m.o+' '+m.avs).toLowerCase().includes(q)))}
+let open4=null;
+function ficha4(m){const fg=(src,cap,big)=>`<figure><img loading="lazy" src="${src}" data-big="${src}" alt="${esc(cap)}"><figcaption>${esc(cap)}</figcaption></figure>`;
+ const mp=`https://www.google.com/maps/place/${m.la},${m.lo}/@${m.la},${m.lo},19z/data=!3m1!1e3`;
+ return `<tr class="fr"><td colspan="9"><div class="ficha">${fg(`img/pz/${m.id}.jpg`,'Plano de zonificación (contorno magenta = manzana)')}${FVM.has(m.id)?fg(`img/vm/${m.id}.jpg`,'Captura del visor SUNARP (contorno magenta = manzana, ±10 m)'):'<figure><div class="sub" style="padding:40px 10px;border:1px dashed #ccc;border-radius:6px;text-align:center">Captura del visor pendiente</div></figure>'}</div>
+ <div class="sub" style="margin:0 0 8px">${esc(m.an||m.avs)} · ${m.a.toLocaleString('es-PE')} m² · frente ${esc(m.ft)} m · zona del frente <b>${esc(m.zf)}</b> (${esc(m.zfs)}) · zona interior ${esc(m.zi)} · <a href="${mp}" target="_blank" rel="noopener">Maps</a></div></td></tr>`}
 function draw4(){const L=rows4();
- $('b4').innerHTML=L.map(m=>`<tr><td><b>${esc(m.id)}</b>${m.mon?` <span class="pill p-var">Monum. ${esc(m.mon)}</span>`:''}</td><td class="mono">${esc(m.o)}</td><td>${esc(m.fpa).replace(/ \| /g,'<br>')} m</td><td><b>${esc(m.zf)}</b><div class="sub">${esc(m.zfs)}</div></td><td>${esc(m.zi)}${m.dif?' <span class="pill p-duda">distinta</span>':''}</td><td class="sub">${esc(m.zm)}</td><td>${m.a.toLocaleString('es-PE')} m²</td><td><a href="https://www.google.com/maps/place/${m.la},${m.lo}/@${m.la},${m.lo},19z/data=!3m1!1e3" target="_blank" rel="noopener">Maps</a></td><td>${vcell(m.id)}</td></tr>`).join('')||'<tr><td colspan="9" class="sub">Sin resultados.</td></tr>'}
+ $('b4').innerHTML=L.map(m=>`<tr class="mz4" data-id="${m.id}"><td><b>${esc(m.id)}</b>${m.mon?` <span class="pill p-var">Monum. ${esc(m.mon)}</span>`:''}<div><a href="#" class="vf" data-f="${m.id}">${open4===m.id?'Ocultar ficha':'Ver ficha'}</a></div></td><td class="mono">${esc(m.o)}</td><td>${esc(m.fpa).replace(/ \| /g,'<br>')} m</td><td><b>${esc(m.zf)}</b><div class="sub">${esc(m.zfs)}</div></td><td>${esc(m.zi)}${m.dif?' <span class="pill p-duda">distinta</span>':''}</td><td class="sub">${esc(m.zm)}</td><td>${m.a.toLocaleString('es-PE')} m²</td><td><a href="https://www.google.com/maps/place/${m.la},${m.lo}/@${m.la},${m.lo},19z/data=!3m1!1e3" target="_blank" rel="noopener">Maps</a></td><td>${vcell(m.id)}</td></tr>`+(open4===m.id?ficha4(m):'')).join('')||'<tr><td colspan="9" class="sub">Sin resultados.</td></tr>'}
 ['v4','z4','m4','q4'].forEach(i=>$(i).addEventListener('input',draw4));
-$('b4').addEventListener('click',e=>{const v=e.target.closest('[data-v]');if(v)vopen(v.dataset.v)});
+$('b4').addEventListener('click',e=>{const v=e.target.closest('[data-v]');if(v){vopen(v.dataset.v);return}const g=e.target.closest('[data-big]');if(g){zoom(g.dataset.big);return}if(e.target.closest('a:not(.vf)'))return;e.preventDefault();const tr=e.target.closest('tr.mz4');if(!tr)return;open4=open4===tr.dataset.id?null:tr.dataset.id;draw4()});
 /* ---------- capturas del visor (imágenes individuales, carga perezosa) ---------- */
 const VBY={},VMZ={};Object.values(VIS).forEach(L=>L.forEach(c=>{VBY[c.id]=c;c.manzanas.forEach(m=>(VMZ[m]=VMZ[m]||[]).push(c))}));
 const vth=(c,w)=>`<img class="vth" loading="lazy" src="img/vis/${c.id}.jpg" data-v="${c.id}" alt="${c.id}" title="${c.id}"${w?` style="width:${w}px"`:''}>`;
@@ -162,7 +168,7 @@ function vopen(id){const c=VBY[id];if(!c)return;vcur=c;const vm=$('vmodal');
  $('vinfo').innerHTML=`<b>${esc(c.id)}</b> · <a href="https://www.google.com/maps/place/${c.lat},${c.lng}/@${c.lat},${c.lng},19z/data=!3m1!1e3" target="_blank" rel="noopener">Ver en Google Maps</a><div style="margin-top:4px"><span class="sub">Manzanas que cubre (${c.manzanas.length}):</span> ${c.manzanas.map(m=>`<a href="#" class="mzl" data-mz="${esc(m)}">${esc(m)}</a>`).join('')||'—'}</div><div class="sub">Toca la imagen para ampliarla a tamaño real.</div>`;
  $('vimg').src=`img/vis/${c.id}.jpg`;vm.style.display='block';vm.scrollTop=0}
 $('vimg').onclick=()=>{if(vcur)zoom(`img/vis/${vcur.id}.jpg`)};
-$('vmodal').addEventListener('click',e=>{const a=e.target.closest('a[data-mz]');if(a){e.preventDefault();const m=a.dataset.mz;$('vmodal').style.display='none';cur=m.slice(0,2);sub='man';opened=null;render();$('q4').value=m;draw4();const r=$('b4').querySelector('tr');if(r){r.style.outline='2px solid var(--o)';r.scrollIntoView({block:'center'})}return}
+$('vmodal').addEventListener('click',e=>{const a=e.target.closest('a[data-mz]');if(a){e.preventDefault();const m=a.dataset.mz;$('vmodal').style.display='none';cur=m.slice(0,2);sub='man';opened=null;open4=null;render();$('q4').value=m;draw4();const r=$('b4').querySelector('tr');if(r){r.style.outline='2px solid var(--o)';r.scrollIntoView({block:'center'})}return}
  if(e.target.closest('.x')||e.target===$('vmodal'))$('vmodal').style.display='none'});
 const b4=$('csv4');b4.style.display='none';
 (async()=>{try{const dl=window.claude&&await window.claude.use('downloads');if(!dl)return;b4.style.display='';b4.onclick=async()=>{const L=rows4();const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const h=['numero','manzana_etapa1','avenidas','frente_por_avenida_m','frente_total_m','zona_frente','zonas_frente','zona_interior','zonas_manzana','area_m2','zona_monumental','lat','lng','google_maps'];const t=[h.join(',')].concat(L.map(m=>[m.id,m.o,m.avs,m.fpa,m.ft,m.zf,m.zfs,m.zi,m.zm,m.a,m.mon,m.la,m.lo,`https://www.google.com/maps/place/${m.la},${m.lo}/@${m.la},${m.lo},19z/data=!3m1!1e3`].map(q).join(','))).join('\n');try{await dl.save({filename:`manzanas_avenidas_${cur}.csv`,data:'﻿'+t})}catch(e){}}}catch(e){}})();
