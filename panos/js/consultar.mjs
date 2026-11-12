@@ -4,7 +4,7 @@ import fs from 'fs'; import http from 'http'; import path from 'path';
 const D = path.resolve('panos');
 const html = fs.readFileSync(path.join(D, 'js/sv.html'));
 const srv = http.createServer((q, r) => { r.writeHead(200, { 'content-type': 'text/html' }); r.end(html); }).listen(8123);
-const filas = fs.readFileSync(path.join(D, 'puntos.csv'), 'utf8').trim().split('\n');
+const filas = fs.readFileSync(path.join(D, 'puntos.csv'), 'utf8').trim().split(/\r?\n/);
 const cab = filas.shift().split(',');
 const pts = filas.map(l => Object.fromEntries(l.split(',').map((v, i) => [cab[i], v]))).filter(p => !p.off || p.off === '8');
 const nav = await chromium.launch({ channel: 'chrome' });
