@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Manzanas en avenidas — 8 distritos de Lima</title>
+<style>
+:root{--g:#00a046;--o:#f39200;--x:#6e6e6e;--b:#1d4ed8;--bd:#e3e3e3;--mut:#666;--ink:#1a1a1a}
+*{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:#fafafa}
+header{padding:16px 16px 6px}h1{margin:0 0 4px;font-size:20px}h2{margin:0;font-size:18px}.sub{color:var(--mut)}
+main{padding:0 16px 24px;max-width:1500px;margin:0 auto}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0}
+@media(min-width:760px){.cards{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.card{display:flex;flex-direction:column;gap:2px;text-align:left;background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px 14px;cursor:pointer;font:inherit;color:inherit;min-height:112px}
+.card:hover{border-color:#bbb}.card.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.card .nm{font-weight:600;font-size:15px}.card .num{font-size:22px;font-weight:700;line-height:1.1}.card .num small{font-size:12px;font-weight:400;color:var(--mut)}
+.card .cap{font-size:12px;color:var(--mut);margin-top:auto;min-height:2.9em}
+.pb{height:7px;background:#ececec;border-radius:6px;overflow:hidden;margin:6px 0 3px}.pb i{display:block;height:100%;background:var(--g);border-radius:6px}
+.rbtn{border:1px solid var(--bd);background:#fff;border-radius:8px;padding:6px 14px;cursor:pointer;font:inherit}.rbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.kpis{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}.kpi{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:8px 14px;min-width:110px}.kpi b{display:block;font-size:20px}
+.tabs{display:flex;gap:6px;margin:12px 0 10px;border-bottom:1px solid var(--bd);padding-bottom:10px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--bd);background:#fff;border-radius:8px;padding:6px 14px;cursor:pointer;font:inherit}.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.sec{display:none}.sec.on{display:block}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}input,select,button{font:inherit}input,select{padding:6px 8px;border:1px solid #ccc;border-radius:7px;max-width:100%}
+.bar button{border:1px solid #ccc;background:#fff;border-radius:7px;padding:6px 10px;cursor:pointer}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;background:#fff;border:1px solid var(--bd)}th,td{padding:6px 8px;border-bottom:1px solid #eee;text-align:left;vertical-align:top}th{background:#f3f3f3;font-size:13px}
+tr.mz,tr.rs{cursor:pointer}tr.mz:hover,tr.rs:hover{background:#f6f9ff}.pill{display:inline-block;padding:1px 8px;border-radius:20px;font-size:12px;border:1px solid #ccc;white-space:nowrap}
+.p-util{background:#e3f6ea;border-color:#9fd8b4;color:#055c2a}.p-duda{background:#fff1dd;border-color:#f5c27a;color:#8a4b00}.p-desc{background:#eee;border-color:#ccc;color:#444}.p-var{background:#efe3fa;border-color:#c9a3ea;color:#5b1d8a}.p-pend{background:#f3f3f3;color:#777}.p-ok{background:#e6edff;border-color:#a9bdf5;color:#1d3c9e}
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:12px;background:#fff;border:1px solid var(--bd);border-radius:10px;padding:12px;margin:6px 0 10px}
+.ficha figure{margin:0}.ficha img{width:100%;border:1px solid #ddd;border-radius:6px;cursor:zoom-in;display:block}.ficha figcaption{font-size:12px;color:var(--mut);margin-top:3px}
+.mono{font-family:ui-monospace,Consolas,monospace}a{color:var(--b)}
+tr.grp td{background:#eef3f8;border-top:2px solid #b9c7d6;padding:6px 8px}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;z-index:50;overflow:auto}#modal img{max-width:none;display:block;margin:auto}#modal .x{position:fixed;top:10px;right:16px;color:#fff;font-size:30px;cursor:pointer}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}.chips a{border:1px solid var(--bd);background:#fff;border-radius:20px;padding:3px 11px;text-decoration:none;color:var(--ink);font-size:13px}.chips a:hover{border-color:#999}
+.map img{max-width:100%;border:1px solid var(--bd);border-radius:8px;cursor:zoom-in}
+.pt{border:1px solid var(--bd);background:#fff;border-radius:10px;padding:10px 12px;margin:8px 0}
+#vmodal{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;z-index:40;overflow:auto;padding:12px}
+#vmodal .box{background:#fff;border-radius:10px;max-width:1400px;margin:20px auto;padding:12px}#vmodal .x{position:absolute;top:8px;right:18px;color:#fff;font-size:30px;cursor:pointer}
+#vimg{width:100%;border:1px solid #ddd;border-radius:6px;cursor:zoom-in;background:#222;display:block}
+.vg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}.vg figure{margin:0;cursor:pointer}.vg figcaption{font-size:12px;text-align:center;color:var(--mut)}
+.vth{display:block;background:#222;border-radius:4px;cursor:zoom-in;border:1px solid #ccc;aspect-ratio:1360/871;object-fit:cover}.vg .vth{width:100%}.pzb{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--bd);background:#fff;border-radius:10px;padding:6px 12px 6px 6px;margin:0 0 12px;cursor:pointer;font:inherit}.pzb:hover{border-color:#999}.pzb img{width:84px;height:54px;object-fit:cover;border-radius:5px;border:1px solid #ddd}
+.vm a.mzl{display:inline-block;margin:2px 4px 2px 0;border:1px solid var(--bd);border-radius:20px;padding:1px 9px;text-decoration:none;font-size:13px}
+</style></head><body>
+<header><h1>Manzanas en avenidas — 8 distritos de Lima</h1>
+<div class="sub">Base gráfica SUNARP + plano de zonificación IMP. Uso interno. Actualizado __FECHA__.</div></header>
+<main>
+<div class="top"><button class="rbtn" id="rbtn">Resumen</button><span class="sub">Elige un distrito para ver su información.</span></div>
+<div class="cards" id="cards"></div>
+<div id="vres" class="sec"></div>
+<div id="vd" class="sec">
+<h2 id="dn"></h2><div class="sub" id="dnote" style="margin-top:2px"></div>
+<div class="kpis" id="dk"></div>
+<div class="tabs" id="st"></div>
+<div id="s-man" class="sec"><div class="bar"><select id="v4"><option value="">Todas las avenidas</option></select><select id="z4"><option value="">Toda zona del frente</option></select><select id="m4"><option value="">Con y sin Zona Monumental</option><option value="no">Sin Zona Monumental</option><option value="dif">Frente distinto al interior</option></select><input id="q4" placeholder="Buscar manzana o avenida"><button id="csv4">Descargar CSV</button></div>
+<div class="tw"><table><thead><tr><th>N.º</th><th>Manzana (etapa 1)</th><th>Avenida(s) y metros de frente</th><th>Zona del frente</th><th>Zona interior</th><th>Manzana completa</th><th>Área</th><th>Mapa</th><th>Visor</th></tr></thead><tbody id="b4"></tbody></table></div>
+<div class="sub" style="margin-top:8px">Solo manzanas con ≥20 m de frente directo a avenida ancha o malecón. "Zona del frente" = franja de 22,5 m desde la avenida, tal cual el plano IMP. Los planos no traen alturas; coordenadas ±10 m.</div></div>
+<div id="s-jm" class="sec"><div class="bar"><input id="q1" placeholder="Buscar manzana, calle o partida"><select id="f1"><option value="">Todas</option><option value="done">Revisadas</option><option value="pend">Pendientes</option></select><span class="sub">Clic en una fila para ver su ficha.</span></div>
+<div class="tw"><table><thead><tr><th>Manzana</th><th>Calles</th><th>Zonas</th><th>Área aprox.</th><th>Útiles</th><th>Duda</th><th>Desarrolladas</th><th>Varias casas</th><th>Estado</th><th>Google Maps</th></tr></thead><tbody id="b1"></tbody></table></div></div>
+<div id="s-par" class="sec"><div class="bar"><input id="q2" placeholder="Buscar partida, calle o motivo"><select id="f2"><option value="">Todos los estados</option><option value="útil">Útil</option><option value="duda">Duda</option><option value="descartado">Ya desarrollado</option><option value="varias casas">Varias casas (4+)</option></select><button id="csv">Descargar CSV</button></div>
+<div class="tw"><table><thead><tr><th>Partida</th><th>Manzana</th><th>Lado / calle</th><th>Frente</th><th>Estado</th><th>Motivo (Street View)</th><th>Foto</th><th>Ubicación</th></tr></thead><tbody id="b2"></tbody></table></div></div>
+<div id="s-map" class="sec"></div>
+<div id="s-vis" class="sec"></div>
+</div>
+</main>
+<div id="vmodal"><span class="x">×</span><div class="box"><div class="vm" id="vinfo"></div><img id="vimg" alt="Captura del visor"></div></div>
+<div id="modal"><span class="x">×</span><img id="mimg" alt=""></div>
+<script>
+const D=__DATA__;
+const DD=__DIST__;
+const CAPT=__CAPT__;
+const VIS=__VIS__;
+const $=i=>document.getElementById(i);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const st=e=>e&&e.startsWith('útil')?'útil':e;
+const pill=e=>{e=st(e);const c={'útil':'p-util','duda':'p-duda','descartado':'p-desc','varias casas':'p-var'}[e]||'p-pend';const t={'útil':'Útil','duda':'Duda','descartado':'Ya desarrollado','varias casas':'Varias casas (4+)'}[e]||e;return `<span class="pill ${c}">${esc(t)}</span>`};
+const cnt=(m,e)=>(m.predios||[]).filter(p=>st(p.estado)===e&&!(p.grupo&&m.predios.find(q=>q.grupo===p.grupo)!==p)).length;
+const done=m=>(m.predios||[]).length>0;
+const zon=z=>Object.entries(z||{}).filter(([k,v])=>v>=.08&&k!=='W').sort((a,b)=>b[1]-a[1]).map(([k])=>k).join(', ');
+const P=[];D.forEach(m=>(m.predios||[]).forEach(p=>P.push({...p,m:m.id,mm:m})));P.sort((a,b)=>a.m<b.m?-1:a.m>b.m?1:(a.orden||0)-(b.orden||0));
+const kp=(a,b)=>`<div class="kpi"><span class="sub">${a}</span><b>${b}</b></div>`;
+/* ---------- distritos ---------- */
+const ORDER=['JM','PL','SM','MG','SQ','MF','SI','BA'];
+const JMINFO={p:'JM',n:'Jesús María',cnt:D.length,nota:'Revisión manzana por manzana: partidas SUNARP, captura del visor, plano de zonificación y Street View (últimos 2-3 años). Cada partida queda como útil, en duda, ya desarrollada o varias casas.',zooms:[]};
+const INFO={JM:JMINFO};DD.distritos.forEach(d=>INFO[d.p]=d);
+const pbar=c=>{const t=c.t||0,pc=t?Math.round(100*c.n/t):0;return `<div class="pb" title="${pc}%"><i style="width:${pc}%"></i></div>`};
+const ctxt=c=>`${c.n}/${c.t}`;
+function cards(){$('cards').innerHTML=ORDER.map(p=>{const i=INFO[p],c=CAPT[p]||{n:0,t:0,u:'marcos'};return `<button class="card${cur===p?' on':''}" data-p="${p}"><span class="nm">${esc(i.n)}</span><span class="num">${i.cnt} <small>manzanas</small></span>${pbar(c)}<span class="cap">Capturas del visor: ${ctxt(c)} ${esc(c.u)}</span></button>`}).join('');$('rbtn').classList.toggle('on',cur==='RES')}
+function resumen(){const L=ORDER.map(p=>[INFO[p],CAPT[p]||{n:0,t:0,u:'marcos'},p]);const tot=L.reduce((s,[i])=>s+i.cnt,0);const mn=L.filter(x=>x[2]!=='JM').reduce((s,x)=>s+x[1].n,0),mt=L.filter(x=>x[2]!=='JM').reduce((s,x)=>s+x[1].t,0);
+ $('vres').innerHTML=`<div class="kpis">${kp('Distritos',8)}${kp('Manzanas (total)',tot.toLocaleString('es-PE'))}${kp('Marcos capturados (7 distritos)',mn+' / '+mt)}${kp('Jesús María (método antiguo)',CAPT.JM.n+' / '+CAPT.JM.t+' manzanas')}</div>
+ <div class="tw"><table><thead><tr><th>Distrito</th><th>Manzanas</th><th style="min-width:180px">Avance de capturas del visor</th><th>Avance</th></tr></thead><tbody>${L.map(([i,c,p])=>`<tr class="rs" data-p="${p}"><td><b>${esc(i.n)}</b></td><td>${i.cnt}</td><td>${pbar(c)}</td><td>${ctxt(c)} ${esc(c.u)}</td></tr>`).join('')}</tbody></table></div>
+ <div class="sub" style="margin-top:8px">Las manzanas de Jesús María son las 171 del estudio original; en los demás distritos son las manzanas con ≥20 m de frente a avenida ancha o malecón. La captura del visor de Jesús María se hizo con el método antiguo (por manzana); en los demás, por marcos de zona.</div>`}
+/* ---------- estado y navegación ---------- */
+let cur='RES',sub='man',opened=null;
+function subs(){return cur==='JM'?[['man','Manzanas'],['map','Mapa'],['par','Partidas']]:[['man','Manzanas'],['map','Mapa'],['vis','Capturas del visor']]}
+function render(){cards();
+ $('vres').classList.toggle('on',cur==='RES');$('vd').classList.toggle('on',cur!=='RES');
+ if(cur==='RES'){resumen();return}
+ const i=INFO[cur],c=CAPT[cur]||{n:0,t:0,u:'marcos'};
+ $('dn').textContent=i.n;$('dnote').textContent=i.nota||'';
+ let k;if(cur==='JM')k=[['Manzanas',D.length],['Revisadas',D.filter(done).length],['Partidas útiles',P.filter(p=>st(p.estado)==='útil').length],['En duda',P.filter(p=>p.estado==='duda').length],['Ya desarrolladas',P.filter(p=>p.estado==='descartado').length],['Varias casas',P.filter(p=>p.estado==='varias casas').length]];
+ else{const z={};DD.mz.filter(m=>m.d===cur).forEach(m=>z[m.zf]=(z[m.zf]||0)+1);k=[['Manzanas en avenida',i.cnt]].concat(Object.entries(z).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([a,b])=>['Frente '+a,b]))}
+ k.push(['Capturas del visor',ctxt(c)+' '+c.u]);
+ $('dk').innerHTML=k.map(([a,b])=>kp(esc(a),esc(b))).join('');
+ if(!subs().some(s=>s[0]===sub))sub='man';
+ $('st').innerHTML=subs().map(([a,b])=>`<button data-s="${a}" class="${sub===a?'on':''}">${b}</button>`).join('');
+ ['s-man','s-jm','s-par','s-map','s-vis'].forEach(x=>$(x).classList.remove('on'));
+ if(sub==='man'){if(cur==='JM'){$('s-jm').classList.add('on');draw1()}else{$('s-man').classList.add('on');opts();draw4()}}
+ else if(sub==='map'){$('s-map').classList.add('on');drawMap()}
+ else if(sub==='vis'){$('s-vis').classList.add('on');drawVis()}
+ else{$('s-par').classList.add('on');draw2()}}
+function go(p){if(p!==cur){cur=p;sub='man';opened=null}render();window.scrollTo({top:0})}
+$('cards').addEventListener('click',e=>{const b=e.target.closest('.card');if(b)go(b.dataset.p)});
+$('rbtn').onclick=()=>go('RES');
+$('vres').addEventListener('click',e=>{const r=e.target.closest('tr.rs');if(r)go(r.dataset.p)});
+$('st').addEventListener('click',e=>{const b=e.target.closest('button');if(b){sub=b.dataset.s;render()}});
+/* ---------- Jesús María: manzanas / partidas ---------- */
+function svUrl(p,m){const la=p.ll[0],lo=p.ll[1],k=Math.cos(la*Math.PI/180);let dy=(la-m.lat)*110574,dx=(lo-m.lng)*111320*k;const n=Math.hypot(dx,dy)||1;dx/=n;dy/=n;const D=18;const vla=la+dy*D/110574,vlo=lo+dx*D/(111320*k);const h=((Math.atan2(-dx,-dy)*180/Math.PI)+360)%360;return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${vla.toFixed(6)},${vlo.toFixed(6)}&heading=${h.toFixed(0)}&pitch=5&fov=80`}
+function ficha(m){const i=m.img||{};const fig=(src,cap)=>src?`<figure><img src="${src}" data-big="${src}" alt="${esc(cap)}"><figcaption>${esc(cap)}</figcaption></figure>`:`<figure><div class="sub" style="padding:40px 10px;border:1px dashed #ccc;border-radius:6px;text-align:center">${esc(cap)}: pendiente</div></figure>`;
+ let _g=null;const rows=(m.predios||[]).map(p=>{const h=(p.calle_grupo&&p.calle_grupo!==_g)?(_g=p.calle_grupo,`<tr class="grp"><td colspan="20"><b>${esc(p.calle_grupo)}</b>${p.lado_c?` <span class="sub">(lado ${esc(p.lado_c)})</span>`:''}</td></tr>`):'';return h+`<tr><td class="mono">${esc(p.partida)}${p.grupo?` <span class="pill">${esc(p.grupo)}</span>`:''}</td><td>${esc(p.lado)}</td><td>${p.ancho_m?p.ancho_m+' m':''}</td><td>${pill(p.estado)}</td><td>${esc(p.motivo)}</td><td>${svh(p.sv_img,120)}</td><td>${p.ll?`<a href="${p.sv||svUrl(p,m)}" target="_blank" rel="noopener">Street View</a>`:''}</td></tr>`}).join('');
+ const gr=(m.grupos_superpuestos||[]).map(g=>`<div class="sub">${esc(g.grupo)}: ${esc(g.partidas.join(' + '))} — ${esc(g.nota)}</div>`).join('');
+ return `<tr><td colspan="10"><div class="ficha">${fig(i.plano,'Plano de zonificación (cruz = centro)')}${fig(i.visor,'Captura del visor SUNARP')}${fig(i.terrenos,'Terrenos útiles / duda / desarrollados')}</div>
+ <div class="sub" style="margin-bottom:6px">Centro: <span class="mono">${m.lat}, ${m.lng}</span> · <a href="${m.maps}" target="_blank" rel="noopener">Abrir en Google Maps</a></div>${gr}
+ ${rows?`<div class="tw"><table><thead><tr><th>Partida</th><th>Lado</th><th>Frente</th><th>Estado</th><th>Motivo</th><th>Foto</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`:(i.visor?'<div class="sub">Captura del visor lista. Falta ubicar las partidas y revisarlas en Street View.</div>':'<div class="sub">Aún sin revisar en el visor.</div>')}</td></tr>`}
+function draw1(){const q=$('q1').value.toLowerCase(),f=$('f1').value;
+ $('b1').innerHTML=D.filter(m=>(!f||(f==='done')===done(m))&&(!q||(m.id+' '+(m.calles||'')+' '+(m.predios||[]).map(p=>p.partida).join(' ')).toLowerCase().includes(q))).map(m=>`<tr class="mz" data-id="${m.id}"><td><b>${m.id}</b></td><td>${esc(m.calles||'—')}</td><td>${esc(zon(m.zonas))}</td><td>${(m.area_m2||0).toLocaleString('es-PE')} m²</td><td>${done(m)?cnt(m,'útil'):'—'}</td><td>${done(m)?cnt(m,'duda'):'—'}</td><td>${done(m)?cnt(m,'descartado'):'—'}</td><td>${done(m)?cnt(m,'varias casas'):'—'}</td><td><span class="pill ${done(m)?'p-ok':'p-pend'}">${done(m)?'Revisada':'Pendiente'}</span></td><td><a href="${m.maps}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Ver</a></td></tr>`+(opened===m.id?ficha(m):'')).join('')}
+$('b1').addEventListener('click',e=>{const img=e.target.closest('[data-big]');if(img){zoom(img.dataset.big);return}const tr=e.target.closest('tr.mz');if(!tr)return;opened=opened===tr.dataset.id?null:tr.dataset.id;draw1()});
+function draw2(){const q=$('q2').value.toLowerCase(),f=$('f2').value;
+ $('b2').innerHTML=P.filter(p=>(!f||st(p.estado)===f)&&(!q||(p.partida+' '+p.lado+' '+p.motivo+' '+p.m).toLowerCase().includes(q))).map(p=>`<tr><td class="mono">${esc(p.partida)}</td><td>${esc(p.m)}</td><td>${esc(p.lado)}</td><td>${p.ancho_m?p.ancho_m+' m':''}</td><td>${pill(p.estado)}</td><td>${esc(p.motivo)}</td><td>${svh(p.sv_img,120)}</td><td>${p.ll?`<a href="${p.sv||svUrl(p,p.mm)}" target="_blank" rel="noopener">Street View</a> · <a href="https://www.google.com/maps/place/${p.ll[0]},${p.ll[1]}/@${p.ll[0]},${p.ll[1]},20z/data=!3m1!1e3" target="_blank" rel="noopener">Mapa</a>`:''}</td></tr>`).join('')}
+['q1','f1'].forEach(i=>$(i).addEventListener('input',draw1));['q2','f2'].forEach(i=>$(i).addEventListener('input',draw2));
+$('b2').addEventListener('click',e=>{const img=e.target.closest('[data-big]');if(img)zoom(img.dataset.big)});
+const csvBtn=$('csv');csvBtn.style.display='none';
+(async()=>{try{const dl=window.claude&&await window.claude.use('downloads');if(!dl)return;csvBtn.style.display='';csvBtn.onclick=async()=>{const h=['partida','manzana','lado','estado','motivo','lat','lng'];const L=[h.join(',')].concat(P.map(p=>[p.partida,p.m,p.lado,st(p.estado),p.motivo,p.ll?.[0]??'',p.ll?.[1]??''].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')));try{await dl.save({filename:'partidas_jesus_maria.csv',data:'﻿'+L.join('\n')})}catch(e){}}}catch(e){}})();
+function svh(src,w){if(!src)return'';const m=src.match(/^(.*)#(\d+)\/(\d+)$/);if(!m)return`<img src="${src}" data-big="${src}" style="width:${w}px;border-radius:4px" alt="Street View">`;const h=Math.round(w*300/640);return`<div data-big="${src}" style="width:${w}px;height:${h}px;border-radius:4px;cursor:zoom-in;background:url('${m[1]}') 0 ${-m[2]*h}px/${w}px ${m[3]*h}px no-repeat" title="Street View"></div>`}
+const modal=$('modal');function zoom(src){const mm=src.match(/^(.*)#(\d+)\/(\d+)$/);const im=$('mimg');if(mm){const c=document.createElement('canvas');const I=new Image();I.onload=()=>{const h=I.height/ +mm[3];c.width=I.width;c.height=h;c.getContext('2d').drawImage(I,0,-h*mm[2]);im.src=c.toDataURL('image/jpeg',.92)};I.src=mm[1]}else im.src=src;modal.style.display='block'}
+modal.onclick=()=>{modal.style.display='none'};
+/* ---------- mapa (todos los distritos) ---------- */
+const pzb=p=>`<button class="pzb" data-big="img/planos/plano_${p}.jpg"><img loading="lazy" src="img/planos/plano_${p}.jpg" alt=""><span><b>Plano de zonificación completo</b><br><span class="sub">Toca para ampliar</span></span></button>`;
+function drawMap(){const i=INFO[cur];
+ if(cur==='JM'){$('s-map').innerHTML=`${pzb('JM')}<div class="sub" style="margin-bottom:8px">Plano con las manzanas numeradas (M###). Clic en la imagen para ampliarla.</div><div class="map"><img src="img/mapa_manzanas.jpg" data-big="img/mapa_manzanas.jpg" alt="Mapa de manzanas numeradas de Jesús María"></div>`;return}
+ $('s-map').innerHTML=`${pzb(cur)}<div class="ficha"><figure><img src="img/av/${cur}_avenidas.jpg" data-big="img/av/${cur}_avenidas.jpg" alt="Mapa ${esc(i.n)}"><figcaption>Mapa general (clic para ampliar)</figcaption></figure></div>
+ <div class="sub">Acercamientos por avenida</div><div class="chips">${i.zooms.map(([n,f])=>`<a href="#" data-z="img/av/${f}">${esc(n)}</a>`).join('')}</div>`}
+$('s-map').addEventListener('click',e=>{const a=e.target.closest('a[data-z]');if(a){e.preventDefault();zoom(a.dataset.z);return}const img=e.target.closest('[data-big]');if(img)zoom(img.dataset.big)});
+/* ---------- manzanas de otros distritos ---------- */
+function opts(){const L=DD.mz.filter(m=>m.d===cur);const av=[...new Set(L.flatMap(m=>m.avs.split('|').map(x=>x.trim()).filter(Boolean)))].sort();
+ $('v4').innerHTML='<option value="">Todas las avenidas</option>'+av.map(a=>`<option>${esc(a)}</option>`).join('');
+ const zs=[...new Set(L.map(m=>m.zf))].sort();$('z4').innerHTML='<option value="">Toda zona del frente</option>'+zs.map(z=>`<option>${esc(z)}</option>`).join('');
+ $('m4').value='';$('q4').value=''}
+function rows4(){const v=$('v4').value,z=$('z4').value,f=$('m4').value,q=$('q4').value.toLowerCase();
+ return DD.mz.filter(m=>m.d===cur&&(!v||m.avs.includes(v))&&(!z||m.zf===z)&&(f!=='no'||!m.mon)&&(f!=='dif'||m.dif)&&(!q||(m.id+' '+m.o+' '+m.avs).toLowerCase().includes(q)))}
+function draw4(){const L=rows4();
+ $('b4').innerHTML=L.map(m=>`<tr><td><b>${esc(m.id)}</b>${m.mon?` <span class="pill p-var">Monum. ${esc(m.mon)}</span>`:''}</td><td class="mono">${esc(m.o)}</td><td>${esc(m.fpa).replace(/ \| /g,'<br>')} m</td><td><b>${esc(m.zf)}</b><div class="sub">${esc(m.zfs)}</div></td><td>${esc(m.zi)}${m.dif?' <span class="pill p-duda">distinta</span>':''}</td><td class="sub">${esc(m.zm)}</td><td>${m.a.toLocaleString('es-PE')} m²</td><td><a href="https://www.google.com/maps/place/${m.la},${m.lo}/@${m.la},${m.lo},19z/data=!3m1!1e3" target="_blank" rel="noopener">Maps</a></td><td>${vcell(m.id)}</td></tr>`).join('')||'<tr><td colspan="9" class="sub">Sin resultados.</td></tr>'}
+['v4','z4','m4','q4'].forEach(i=>$(i).addEventListener('input',draw4));
+$('b4').addEventListener('click',e=>{const v=e.target.closest('[data-v]');if(v)vopen(v.dataset.v)});
+/* ---------- capturas del visor (imágenes individuales, carga perezosa) ---------- */
+const VBY={},VMZ={};Object.values(VIS).forEach(L=>L.forEach(c=>{VBY[c.id]=c;c.manzanas.forEach(m=>(VMZ[m]=VMZ[m]||[]).push(c))}));
+const vth=(c,w)=>`<img class="vth" loading="lazy" src="img/vis/${c.id}.jpg" data-v="${c.id}" alt="${c.id}" title="${c.id}"${w?` style="width:${w}px"`:''}>`;
+function vcell(id){const L=VMZ[id]||[];return L.length?`<div style="display:flex;align-items:center;gap:6px">${vth(L[0],96)}${L.length>1?`<span class="sub">+${L.length-1}</span>`:''}</div>`:'<span class="sub">—</span>'}
+function drawVis(){const L=VIS[cur]||[];
+ $('s-vis').innerHTML=L.length?`<div class="sub" style="margin-bottom:8px">${L.length} capturas del visor SUNARP. Toca una para verla en grande.</div><div class="vg">${L.map(c=>`<figure>${vth(c,0)}<figcaption>${esc(c.id)}</figcaption></figure>`).join('')}</div>`:'<div class="sub pt">Aún sin capturas.</div>'}
+$('s-vis').addEventListener('click',e=>{const v=e.target.closest('[data-v]');if(v)vopen(v.dataset.v)});
+let vcur=null;
+function vopen(id){const c=VBY[id];if(!c)return;vcur=c;const vm=$('vmodal');
+ $('vinfo').innerHTML=`<b>${esc(c.id)}</b> · <a href="https://www.google.com/maps/place/${c.lat},${c.lng}/@${c.lat},${c.lng},19z/data=!3m1!1e3" target="_blank" rel="noopener">Ver en Google Maps</a><div style="margin-top:4px"><span class="sub">Manzanas que cubre (${c.manzanas.length}):</span> ${c.manzanas.map(m=>`<a href="#" class="mzl" data-mz="${esc(m)}">${esc(m)}</a>`).join('')||'—'}</div><div class="sub">Toca la imagen para ampliarla a tamaño real.</div>`;
+ $('vimg').src=`img/vis/${c.id}.jpg`;vm.style.display='block';vm.scrollTop=0}
+$('vimg').onclick=()=>{if(vcur)zoom(`img/vis/${vcur.id}.jpg`)};
+$('vmodal').addEventListener('click',e=>{const a=e.target.closest('a[data-mz]');if(a){e.preventDefault();const m=a.dataset.mz;$('vmodal').style.display='none';cur=m.slice(0,2);sub='man';opened=null;render();$('q4').value=m;draw4();const r=$('b4').querySelector('tr');if(r){r.style.outline='2px solid var(--o)';r.scrollIntoView({block:'center'})}return}
+ if(e.target.closest('.x')||e.target===$('vmodal'))$('vmodal').style.display='none'});
+const b4=$('csv4');b4.style.display='none';
+(async()=>{try{const dl=window.claude&&await window.claude.use('downloads');if(!dl)return;b4.style.display='';b4.onclick=async()=>{const L=rows4();const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const h=['numero','manzana_etapa1','avenidas','frente_por_avenida_m','frente_total_m','zona_frente','zonas_frente','zona_interior','zonas_manzana','area_m2','zona_monumental','lat','lng','google_maps'];const t=[h.join(',')].concat(L.map(m=>[m.id,m.o,m.avs,m.fpa,m.ft,m.zf,m.zfs,m.zi,m.zm,m.a,m.mon,m.la,m.lo,`https://www.google.com/maps/place/${m.la},${m.lo}/@${m.la},${m.lo},19z/data=!3m1!1e3`].map(q).join(','))).join('\n');try{await dl.save({filename:`manzanas_avenidas_${cur}.csv`,data:'﻿'+t})}catch(e){}}}catch(e){}})();
+render();
+</script></body></html>
