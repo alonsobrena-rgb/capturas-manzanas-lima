@@ -19,7 +19,7 @@ OFFSET_M = {p: (0.0, 0.0) for p in DIRS.values()}      # (este, norte) en m a SU
 if os.path.exists(S + 'fichas_offset.json'):
     OFFSET_M.update({k: tuple(v) for k, v in json.load(open(S + 'fichas_offset.json')).items()})
 VER = 'v3'
-REDO = {'PL'}   # distritos con capturas nuevas por manzana (las viejas no se muestran)
+REDO = {'PL', 'SM'}   # distritos con capturas nuevas por manzana (las viejas no se muestran)
 MAG = (255, 0, 255)
 PZ, VM = REPO + 'img/pz/', REPO + 'img/vm/'
 os.makedirs(PZ, exist_ok=True); os.makedirs(VM, exist_ok=True)
@@ -75,11 +75,14 @@ def frame_for(i, frames, geo):
 def do_visor(pref, d, ms):
     out = {}; n = 0
     v2 = os.environ.get('V2', '/home/claude/recap') + f'/{pref}_v2/'
+    pp = os.environ.get('V2', '/home/claude/recap') + f'/plan1_{pref}.json'
+    global PLAN_OK; PLAN_OK = {t['cap'] for t in json.load(open(pp))} if os.path.exists(pp) else None
     if pref in REDO:                     # distrito recapturado: solo capturas nuevas (1 por manzana, centradas)
         import glob
         for m in ms:
             i = m['id']; dst = VM + i + '.jpg'
             fs = sorted(glob.glob(v2 + i + '.png') + glob.glob(v2 + i + '_*.png'))
+            if PLAN_OK is not None: fs = [f for f in fs if os.path.basename(f)[:-4] in PLAN_OK]   # sin cuadros descartados (pin fuera de la manzana)
             if not fs:
                 if os.path.exists(dst): os.remove(dst)
                 cache.pop('vm/' + i, None); continue
