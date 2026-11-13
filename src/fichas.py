@@ -19,6 +19,7 @@ OFFSET_M = {p: (0.0, 0.0) for p in DIRS.values()}      # (este, norte) en m a SU
 if os.path.exists(S + 'fichas_offset.json'):
     OFFSET_M.update({k: tuple(v) for k, v in json.load(open(S + 'fichas_offset.json')).items()})
 VER = 'v3'
+REDO = {'PL'}   # distritos con capturas nuevas por manzana (las viejas no se muestran)
 MAG = (255, 0, 255)
 PZ, VM = REPO + 'img/pz/', REPO + 'img/vm/'
 os.makedirs(PZ, exist_ok=True); os.makedirs(VM, exist_ok=True)
@@ -72,7 +73,24 @@ def frame_for(i, frames, geo):
 
 
 def do_visor(pref, d, ms):
-    mp = f'{CAP}{d}/marcos.json'; out = {}; n = 0
+    out = {}; n = 0
+    v2 = os.environ.get('V2', '/home/claude/recap') + f'/{pref}_v2/'
+    if pref in REDO:                     # distrito recapturado: solo capturas nuevas (1 por manzana, centradas)
+        import glob
+        for m in ms:
+            i = m['id']; dst = VM + i + '.jpg'
+            fs = sorted(glob.glob(v2 + i + '.png') + glob.glob(v2 + i + '_*.png'))
+            if not fs:
+                if os.path.exists(dst): os.remove(dst)
+                cache.pop('vm/' + i, None); continue
+            out[i] = 'v2'; sig = h([VER, 'v2'] + [stamp(f) for f in fs])
+            if cache.get('vm/' + i) == sig and os.path.exists(dst): continue
+            ims = [Image.open(f).convert('RGB') for f in fs]; W = max(x.width for x in ims)
+            c = Image.new('RGB', (W, sum(x.height for x in ims) + 8 * (len(ims) - 1)), 'white'); y = 0
+            for x in ims: c.paste(x, (0, y)); y += x.height + 8
+            c.save(dst, 'JPEG', quality=88, optimize=True); cache['vm/' + i] = sig; n += 1
+        return n, out
+    mp = f'{CAP}{d}/marcos.json'
     if not os.path.exists(mp): return 0, out
     frames = json.load(open(mp))
     for f in frames:
