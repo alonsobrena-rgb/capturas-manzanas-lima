@@ -1,0 +1,19 @@
+name: fotos-streetview
+on:
+  push:
+    paths: ['panos/fotos/plan.json', 'panos/fotos/bajar.py']
+  workflow_dispatch:
+jobs:
+  bajar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bajar fotos (Street View Static API)
+        env:
+          GOOGLE_MAPS_KEY: ${{ secrets.GOOGLE_MAPS_KEY }}
+        run: python3 panos/fotos/bajar.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fotos
+          path: panos/fotos/out/
+          retention-days: 3
